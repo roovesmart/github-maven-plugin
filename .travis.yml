@@ -1,0 +1,17 @@
+language: java
+jdk:
+  - openjdk6
+  - openjdk7
+install: true
+branches:
+  only:
+    - master
+env:
+  global:
+    secure: "k+/AIp49Ag5jel7LGBGoV9cHa5Ye8LTB16jLlHeOsKAMrwl9KQdw0WrnAFbAxdvNTSRUy295HKdbF1ZtZaXRp1sdpfjkwz8oLF57AsAF4dQdtVivb+R4zSIVlKWbOgPw7vHpZd7Devg3vcsiSfTJLAUi68WMhk4JSwMLaXd11JcJYc6fk3FG84raJzKuiN0xNYUukxBWZHFX8Bg543Tv8CHsVJ4H65CGGrOArdisjoPnmZtQrMOJTgBLtYQwGx8utiX0dsR6PjvqJ/KVEiwvVy8OM3LNA1hHqBSwL5FlT/w7shlNNmF3ezfrGXGQUxy7hJU2q02VnblNJc63XDdq8j0v9rJxnz6oQaYoa/NBPm02/wzea1xPEKVSy5kqHisIQddLqm9B2sbBE90XyVmppjbZmyCUpr6mk5h4FWGFvFuTbt/NOP3o89TyHEBtEN0XgB9cdwiW46pJAZP8iLy24Q/W0wFLF0nOk5+iZybEeFcxYBFQGfqDzCdBsgqA+0cfotv59UzDgeIV3bBi3WRoqhpBQnw6PFwh+omfETux6fHz5vGTPCUyJ8DenY761QHkpZ/5x0ZCgciMsADrBA+8aUp/ZiyNvgssyYkgCai1QRzgLt5BPGDX0rX7sPYiLEtnIdDgbJxMN0xaQyEro60cbMDvjGW9qPko7+NcR0VKlJM="
+before_script:
+script:
+  - mvn deploy -P dep
+after_script:
+after_success:
+after_failure:
