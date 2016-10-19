@@ -448,40 +448,47 @@ public class DeployMojo extends GitHubProjectMojo
 			entries.add(entry);
 		}
 
-		// creating pushOptionFiles
-		for(PushOptionFile pushOptionFile : pushOptionFiles){
+		if(pushOptionFiles!=null && pushOptionFiles.size()!=0){
 
-			if (isDebug()){
-				debug(MessageFormat.format("pushOptionFile.fileName : {0} ", pushOptionFile.fileName));
-				debug(MessageFormat.format("pushOptionFile.text : {0} ", pushOptionFile.text));
+			// creating pushOptionFiles
+			for(PushOptionFile pushOptionFile : pushOptionFiles){
+
+				if (isDebug()){
+					debug(MessageFormat.format("pushOptionFile.fileName : {0} ", pushOptionFile.fileName));
+					debug(MessageFormat.format("pushOptionFile.text : {0} ", pushOptionFile.text));
+				}
+
+				TreeEntry entry = new TreeEntry();
+				entry.setPath(pushOptionFile.fileName);
+				entry.setType(TYPE_BLOB);
+				entry.setMode(MODE_BLOB);
+
+				if (!dryRun)
+
+					try {
+						Blob blob = new Blob().setEncoding(ENCODING_BASE64);
+						String encoded = EncodingUtils.toBase64(pushOptionFile.text.getBytes("UTF-8"));
+						blob.setContent(encoded);
+
+						if (isDebug())
+							debug(MessageFormat.format("Creating blob from {0}",
+									pushOptionFile.fileName));
+
+						entry.setSha(service.createBlob(repository,blob));
+
+					} catch (IOException e) {
+						throw new MojoExecutionException(
+								"Error creating PushOptionFile blob:"
+										+ getExceptionMessage(e), e);
+					}
+				entries.add(entry);
+
 			}
 
-			TreeEntry entry = new TreeEntry();
-			entry.setPath(pushOptionFile.fileName);
-			entry.setType(TYPE_BLOB);
-			entry.setMode(MODE_BLOB);
-
-			if (!dryRun)
-
-				try {
-					Blob blob = new Blob().setEncoding(ENCODING_BASE64);
-					String encoded = EncodingUtils.toBase64(pushOptionFile.text.getBytes("UTF-8"));
-					blob.setContent(encoded);
-
-					if (isDebug())
-						debug(MessageFormat.format("Creating blob from {0}",
-								pushOptionFile.fileName));
-
-					entry.setSha(service.createBlob(repository,blob));
-
-				} catch (IOException e) {
-					throw new MojoExecutionException(
-							"Error creating PushOptionFile blob:"
-									+ getExceptionMessage(e), e);
-				}
-			entries.add(entry);
 
 		}
+
+
 
 		// get ref
 		// @see https://developer.github.com/v3/git/refs/
